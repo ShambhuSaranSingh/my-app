@@ -4,7 +4,7 @@ import Footer from "./Footer";
 function AppLayout({ children }) {
   return (
     <>
-      <Header  name="Rahul" />
+      <Header />
       {children}
       <Footer />
     </>

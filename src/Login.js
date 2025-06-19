@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Header from "./layout/Header";
 import footer from "./layout/Footer";
-function Login() {
+function Login({updateUserDetails}) {
   const [formData, setFormData] = useState({
     username: '',
     password: ''
@@ -42,7 +42,11 @@ function Login() {
 
     if (validate()) {
       if (formData.username === 'admin' && formData.password === 'admin') {
-        setMessage('✅ Valid Credentials');
+        // setMessage('✅ Valid Credentials');
+        updateUserDetails({
+          name: 'john cena',
+          email: 'john.cena@gmail.com',
+      });
       } else {
         setMessage('❌ Invalid Credentials');
       }
@@ -53,7 +57,6 @@ function Login() {
 
   return (
     <>
-    <Header />
     <div className="container text-center mt-4">
       {message && <p><strong>{message}</strong></p>}
 
@@ -89,7 +92,6 @@ function Login() {
         </div>
       </form>
     </div>
-    {footer()}
     </>
   );
 }
