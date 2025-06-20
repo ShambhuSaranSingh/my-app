@@ -1,10 +1,11 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {Route, Routes, Navigate } from 'react-router-dom';
 import Home from "./Home";
 import Login from './Login';
 import AppLayout from './layout/AppLayout';
 import Dashboard from './pages/Dashboard';
+import axios from "axios";
 
 
 function App() {
@@ -15,6 +16,16 @@ function App() {
     setUserDetails(updateUserDetails);
   };
 
+  const isUserLoggedIn = async () => {
+    const res = await axios.post('http://localhost:5002/auth/is-user-logged-in', {}, {
+      withCredentials: true, // to send cookies with the request
+    });
+    updateUserDetails(res.data.user);
+  };
+  useEffect(() => {
+    isUserLoggedIn();
+  }, []);
+  
   return (
     <>
       <Routes>

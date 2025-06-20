@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Header from "./layout/Header";
-import footer from "./layout/Footer";
+import axios from "axios"; 
+
 function Login({updateUserDetails}) {
   const [formData, setFormData] = useState({
     username: '',
@@ -8,8 +8,7 @@ function Login({updateUserDetails}) {
   });
 
   const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState(null);
-
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -37,29 +36,32 @@ function Login({updateUserDetails}) {
     return isValid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validate()) {
-      if (formData.username === 'admin' && formData.password === 'admin') {
-        // setMessage('✅ Valid Credentials');
-        updateUserDetails({
-          name: 'john cena',
-          email: 'john.cena@gmail.com',
-      });
-      } else {
-        setMessage('❌ Invalid Credentials');
+      const body = {
+        username:formData.username,
+        password:formData.password
       }
-    } else {
-      setMessage(null);
+      const config = {
+        withCredentials: true, // to send cookies with the request
+      };
+      try{
+        const res = await axios.post('http://localhost:5002/auth/login', body, config)
+        updateUserDetails(res.data.user); // update user details in parent component
+      }
+      catch (error) {
+        console.log(error);
+        setErrors({message: "something went wrong, please try again"});
+      }
     }
   };
 
   return (
     <>
-    <div className="container text-center mt-4">
-      {message && <p><strong>{message}</strong></p>}
-
+    <div className="container text-center">
+      {errors.message && <p><strong>{errors.message}</strong></p>}
       <h1>Login Page</h1>
 
       <form onSubmit={handleSubmit}>
